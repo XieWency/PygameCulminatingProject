@@ -28,9 +28,9 @@ if platform.system() == "Windows":
     os.environ['SDL_VIDEODRIVER'] = 'windib'
 
 #set-up the main screen display window and caption in the 
-window_width = 880
-window_height = 620
-size = (window_width, window_height)  
+display_width = 880
+display_height = 620
+size = (display_width, display_height)  
 screen = pygame.display.set_mode(size) 
 
 #puts a caption in the bar at the top of the window
@@ -51,13 +51,17 @@ keepGoing = True 	    #<-- a 'flag' variable for the game loop condition
 bigfont = pygame.font.SysFont("insert... font", 42)
 
 #test=pygame.display.get_driver()
-state = "menu"
-btn_animation=pygame.image.load("insert... gif_x").convert()
-btn_lesson=pygame.image.load("insert... gif_y").convert()
-btn_quiz=pygame.image.load("insert... gif_z").convert()
-btn_results=pygame.image.load("insert... gif_a").convert()
-btn_exit=pygame.image.load("insert... gif_b").convert()
+state = "title screen"
 
+main_menu_background = pygame.image.load("image folder/insert... png_y").convert()
+btn_cont = pygame.image.load("insert... gif_x").convert()
+btn_animation = pygame.image.load("insert... gif_x").convert()
+btn_lesson = pygame.image.load("insert... gif_y").convert()
+btn_quiz = pygame.image.load("insert... gif_z").convert()
+btn_results = pygame.image.load("insert... gif_a").convert()
+btn_exit = pygame.image.load("insert... gif_b").convert()
+
+animation_intro = bigfont.render(('to be written...'), True, (255,255,255))
 lesson_intro = bigfont.render(('to be written...'), True, (255,255,255))
 quiz_intro = bigfont.render(('to be written...'), True, (0,0,0))
 no_results_comment = bigfont.render(('to be written...'), True, (200,0,10))
@@ -71,28 +75,38 @@ try:
         clock.tick(60) #delay
         screen.blit(background_image, (0, 0))  
         
+        if state == "title screen":
+            # -------------------button-------------------
+            cont = screen.blit(btn_cont, (100, 250))            
+        
         if state == "main menu":
-           # buttons-------------------
-                ba = screen.blit(btn_animation,(100,50)) 
-                bl = screen.blit(btn_lesson,(100,100)) 
-                bq = screen.blit(btn_quiz,(100,150))
-                br = screen.blit(btn_results,(100,200))
-                be = screen.blit(btn_exit,(100,250))
+            # ---------------code for the main menu-------------------
+            screen.blit(main_menu_background, (0, 0))
+            # -------------------buttons-------------------
+            ba = screen.blit(btn_animation, (100, 50)) 
+            bl = screen.blit(btn_lesson, (100, 100)) 
+            bq = screen.blit(btn_quiz, (100, 150))
+            br = screen.blit(btn_results, (100, 200))
+            be = screen.blit(btn_exit, (100, 250))
    
-        elif state == "animation lesson":  
-            # ---------------code for the animation/lesson-------------------               
-            screen.blit(lesson_intro, (20,50))
+        elif state == "animation":  
+            # ---------------code for the animation-------------------               
+            screen.blit(animation_intro, (20, 50))
+            
+        elif state == "lesson":  
+            # ---------------code for the lesson-------------------               
+            screen.blit(lesson_intro, (20, 50))
 
         elif state == "quiz":
             # ---------------code for the quiz-------------------
-            screen.blit(quiz_intro, (20,70))
+            screen.blit(quiz_intro, (20, 70))
             
         elif state == "results":
             # ---------------code for results-------------------
             if quiz_complete:
-                screen.blit(results_display, (20,70)) 
+                screen.blit(results_display, (20, 70)) 
             else: #for backup purposes: even if the user attempts to view the results before completing the quiz, the program won't crash
-                screen.blit(no_results_comment, (20,70)) 
+                screen.blit(no_results_comment, (20, 70)) 
 
         pygame.display.flip()
         #handle any events in the current frame
@@ -104,11 +118,11 @@ try:
                 keepGoing = False
                 
             elif ev.type == MOUSEBUTTONDOWN:
-                pos=pygame.mouse.get_pos()
+                pos = pygame.mouse.get_pos()
                 if ba.collidepoint(pos):
-                    state = "animation lesson"
+                    state = "animation"
                 elif bl.collidepoint(pos):
-                    state = "animation lesson"
+                    state = "lesson"
                 elif bq.collidepoint(pos):
                     state = "quiz"      
                 elif br.collidepoint(pos):
