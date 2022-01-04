@@ -1,7 +1,7 @@
 """
-Program Authors: Wency X. & Sue H.
-Revision Date: December 24, 2021
-Program Name: Python Culminating Project
+Program Authors: Wency Xie & Sue He
+Revision Date: January 03, 2022
+Program Name: Python Culminating Project - main file
 Description: to be written...
 """
 
@@ -34,11 +34,7 @@ size = (display_width, display_height)
 screen = pygame.display.set_mode(size) 
 
 #puts a caption in the bar at the top of the window
-pygame.display.set_caption("to be written...") 
-
-#sets memory screen surface with chosen background image
-background_image = pygame.image.load("image folder/insert... png_x").convert()
-screen.blit(background_image, (0, 0))  
+pygame.display.set_caption("The Basics of Body Language") 
 
 #update and refresh the display to end this frame
 pygame.display.flip() #<-- refresh the display
@@ -53,31 +49,39 @@ bigfont = pygame.font.SysFont("insert... font", 42)
 #test=pygame.display.get_driver()
 state = "title screen"
 
+"""
 main_menu_background = pygame.image.load("image folder/insert... png_y").convert()
-btn_cont = pygame.image.load("insert... gif_x").convert()
+credits_background = pygame.image.load("image folder/insert... png_m").convert()
+"""
+btn_cont_img = pygame.image.load("image folder/btn_continue.jpg").convert()
+btn_cont_img = pygame.transform.scale(btn_cont_img, (200, 50))
+"""
 btn_animation = pygame.image.load("insert... gif_x").convert()
 btn_lesson = pygame.image.load("insert... gif_y").convert()
 btn_quiz = pygame.image.load("insert... gif_z").convert()
 btn_results = pygame.image.load("insert... gif_a").convert()
 btn_exit = pygame.image.load("insert... gif_b").convert()
 
-animation_intro = bigfont.render(('to be written...'), True, (255,255,255))
-lesson_intro = bigfont.render(('to be written...'), True, (255,255,255))
-quiz_intro = bigfont.render(('to be written...'), True, (0,0,0))
-no_results_comment = bigfont.render(('to be written...'), True, (200,0,10))
-results_display = bigfont.render(('to be written...'), True, (200,0,10))
+animation_intro = bigfont.render(('to be written...'), True, (255, 255, 255))
+lesson_intro = bigfont.render(('to be written...'), True, (255, 255, 255))
+quiz_intro = bigfont.render(('to be written...'), True, (0, 0, 0))
+no_results_comment = bigfont.render(('to be written...'), True, (200, 0, 10))
+results_display = bigfont.render(('to be written...'), True, (200, 0, 10))
+credits_display = bigfont.render(('to be written...'), True, (0, 0, 0))
+"""
 
 quiz_complete = False
 
 try:
     while keepGoing:
         
-        clock.tick(60) #delay
-        screen.blit(background_image, (0, 0))  
+        clock.tick(60) #delay 
         
         if state == "title screen":
+            from title_screen import display_title_screen
+            display_title_screen(size, screen)
             # -------------------button-------------------
-            cont = screen.blit(btn_cont, (100, 250))            
+            btn_cont = screen.blit(btn_cont_img, (645, 535))            
         
         if state == "main menu":
             # ---------------code for the main menu-------------------
@@ -99,12 +103,12 @@ try:
 
         elif state == "quiz":
             # ---------------code for the quiz-------------------
-            screen.blit(quiz_intro, (20, 70))
+            import quiz
             
         elif state == "results":
             # ---------------code for results-------------------
             if quiz_complete:
-                screen.blit(results_display, (20, 70)) 
+                import quiz
             else: #for backup purposes: even if the user attempts to view the results before completing the quiz, the program won't crash
                 screen.blit(no_results_comment, (20, 70)) 
 
@@ -119,7 +123,9 @@ try:
                 
             elif ev.type == MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
-                if ba.collidepoint(pos):
+                if btn_cont.collidepoint(pos):
+                    state = "main menu"
+                elif ba.collidepoint(pos):
                     state = "animation"
                 elif bl.collidepoint(pos):
                     state = "lesson"
@@ -131,4 +137,9 @@ try:
                     keepGoing = False
 
 finally:
+    """
+    screen.blit(credits_background, (0, 0))  
+    screen.blit(credits_display, (20, 70))    
+    time.sleep(15)
+    """
     pygame.quit()  # keep this IDLE friendly 
