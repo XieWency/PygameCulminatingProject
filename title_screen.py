@@ -11,7 +11,7 @@ def display_title_screen(size, screen):
     #declare and initialize variables
     text = str("")
     text_list = []
-    normal_text_y = int(250)
+    normal_text_y = int(160)
     
     #display the background
     title_background = pygame.image.load("image folder/title_background.jpg")
@@ -27,13 +27,13 @@ def display_title_screen(size, screen):
     text_list = text.split("\n") #splits the text into an array
     
     #fonts
-    title_font = pygame.font.SysFont("courier", 50, bold = True) #for the title
-    normal_font = pygame.font.SysFont("helvetica", 17) #for the other information
+    title_font = pygame.font.SysFont("courier", 48, bold = True) #for the title
+    normal_font = pygame.font.SysFont("kalam", 18) #for the other information
     
-    program_name = title_font.render(text_list[0], True, (0, 50, 5)) #displaying the title
-    screen.blit(program_name, (36, 60))
+    program_name = title_font.render(text_list[0], True, (0, 0, 0)) #displaying the title
+    screen.blit(program_name, (47, 60))
     
     for i in range(1, 5):
         informational_text = normal_font.render(text_list[i], True, (0, 0, 0))
-        screen.blit(informational_text, (40, normal_text_y))
+        screen.blit(informational_text, (47, normal_text_y))
         normal_text_y += 20

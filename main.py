@@ -27,11 +27,14 @@ import platform
 if platform.system() == "Windows":
     os.environ['SDL_VIDEODRIVER'] = 'windib'
 
-#set-up the main screen display window and caption in the 
+#set-up the main screen display window
 display_width = 880
-display_height = 620
+display_height = 550
 size = (display_width, display_height)  
 screen = pygame.display.set_mode(size) 
+
+#other size set-ups
+main_menu_btn_size = (200, 78)
 
 #puts a caption in the bar at the top of the window
 pygame.display.set_caption("The Basics of Body Language") 
@@ -49,19 +52,27 @@ bigfont = pygame.font.SysFont("insert... font", 42)
 #test=pygame.display.get_driver()
 state = "title screen"
 
+main_menu_background = pygame.image.load("image folder/main_menu_background.png").convert()
+main_menu_background = pygame.transform.scale(main_menu_background, (size))
+
 """
-main_menu_background = pygame.image.load("image folder/insert... png_y").convert()
 credits_background = pygame.image.load("image folder/insert... png_m").convert()
 """
 btn_cont_img = pygame.image.load("image folder/btn_continue.jpg").convert()
 btn_cont_img = pygame.transform.scale(btn_cont_img, (200, 50))
-"""
-btn_animation = pygame.image.load("insert... gif_x").convert()
-btn_lesson = pygame.image.load("insert... gif_y").convert()
-btn_quiz = pygame.image.load("insert... gif_z").convert()
-btn_results = pygame.image.load("insert... gif_a").convert()
-btn_exit = pygame.image.load("insert... gif_b").convert()
 
+btn_animation_img = pygame.image.load("image folder/btn_animation.jpg").convert()
+btn_animation_img = pygame.transform.scale(btn_animation_img, main_menu_btn_size)
+btn_lesson_img = pygame.image.load("image folder/btn_lesson.jpg").convert()
+btn_lesson_img = pygame.transform.scale(btn_lesson_img, main_menu_btn_size)
+btn_quiz_img = pygame.image.load("image folder/btn_quiz.jpg").convert()
+btn_quiz_img = pygame.transform.scale(btn_quiz_img, main_menu_btn_size)
+btn_result_img = pygame.image.load("image folder/btn_result.jpg").convert()
+btn_result_img = pygame.transform.scale(btn_result_img, main_menu_btn_size)
+btn_exit_img = pygame.image.load("image folder/btn_exit.jpg").convert()
+btn_exit_img = pygame.transform.scale(btn_exit_img, main_menu_btn_size)
+
+"""
 animation_intro = bigfont.render(('to be written...'), True, (255, 255, 255))
 lesson_intro = bigfont.render(('to be written...'), True, (255, 255, 255))
 quiz_intro = bigfont.render(('to be written...'), True, (0, 0, 0))
@@ -81,17 +92,19 @@ try:
             from title_screen import display_title_screen
             display_title_screen(size, screen)
             # -------------------button-------------------
-            btn_cont = screen.blit(btn_cont_img, (645, 535))            
+            btn_cont = screen.blit(btn_cont_img, (645, 465))            
         
         if state == "main menu":
             # ---------------code for the main menu-------------------
             screen.blit(main_menu_background, (0, 0))
             # -------------------buttons-------------------
-            ba = screen.blit(btn_animation, (100, 50)) 
-            bl = screen.blit(btn_lesson, (100, 100)) 
-            bq = screen.blit(btn_quiz, (100, 150))
-            br = screen.blit(btn_results, (100, 200))
-            be = screen.blit(btn_exit, (100, 250))
+
+            btn_animation = screen.blit(btn_animation_img, (600, 40)) 
+            btn_lesson = screen.blit(btn_lesson_img, (600, 140)) 
+            btn_quiz = screen.blit(btn_quiz_img, (600, 240))
+            btn_result = screen.blit(btn_result_img, (600, 340))
+            btn_exit = screen.blit(btn_exit_img, (600, 440))
+
    
         elif state == "animation":  
             # ---------------code for the animation-------------------               
@@ -103,7 +116,8 @@ try:
 
         elif state == "quiz":
             # ---------------code for the quiz-------------------
-            import quiz
+            from quiz import display_quiz
+            display_quiz(size, screen)
             
         elif state == "results":
             # ---------------code for results-------------------
@@ -123,18 +137,18 @@ try:
                 
             elif ev.type == MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
+                if state == "main menu" and btn_animation.collidepoint(pos):
+                    state = "animation"
+                elif state == "main menu" and btn_lesson.collidepoint(pos):
+                    state = "lesson"
+                elif state == "main menu" and btn_quiz.collidepoint(pos):
+                    state = "quiz"      
+                elif state == "main menu" and btn_result.collidepoint(pos):
+                    state = "results"                     
+                elif state == "main menu" and btn_exit.collidepoint(pos):
+                    keepGoing = False
                 if btn_cont.collidepoint(pos):
                     state = "main menu"
-                elif ba.collidepoint(pos):
-                    state = "animation"
-                elif bl.collidepoint(pos):
-                    state = "lesson"
-                elif bq.collidepoint(pos):
-                    state = "quiz"      
-                elif br.collidepoint(pos):
-                    state = "results"                     
-                elif be.collidepoint(pos):
-                    keepGoing = False
 
 finally:
     """
