@@ -1,6 +1,6 @@
 """
 Program Authors: Wency Xie & Sue He
-Revision Date: January 03, 2022
+Revision Date: January 06, 2022
 Program Name: Python Culminating Project - main file
 Description: to be written...
 """
@@ -26,6 +26,9 @@ import os, time
 import platform
 if platform.system() == "Windows":
     os.environ['SDL_VIDEODRIVER'] = 'windib'
+    
+#import subprograms
+import lesson
 
 #set-up the main screen display window
 display_width = 880
@@ -51,6 +54,7 @@ bigfont = pygame.font.SysFont("insert... font", 42)
 
 #test=pygame.display.get_driver()
 state = "title screen"
+lesson_state = "intro"
 
 main_menu_background = pygame.image.load("image folder/main_menu_background.png").convert()
 main_menu_background = pygame.transform.scale(main_menu_background, (size))
@@ -71,6 +75,14 @@ btn_result_img = pygame.image.load("image folder/btn_result.jpg").convert()
 btn_result_img = pygame.transform.scale(btn_result_img, main_menu_btn_size)
 btn_exit_img = pygame.image.load("image folder/btn_exit.jpg").convert()
 btn_exit_img = pygame.transform.scale(btn_exit_img, main_menu_btn_size)
+
+#Lesson buttons
+btn_lesson_intro_img = pygame.image.load("image folder/intro_btn.png").convert()
+btn_lesson_facial_expressions_img = pygame.image.load("image folder/facial_expressions_btn.png").convert()
+btn_lesson_gestures_img = pygame.image.load("image folder/gestures_btn.png").convert()
+btn_lesson_posture_appearance_personal_space_img = pygame.image.load("image folder/posture_appearance_personal_space_btn.png").convert()
+btn_lesson_voice_paralinguistics_img = pygame.image.load("image folder/voice_paralinguistics_btn.png").convert()
+btn_lesson_back_img = pygame.image.load("image folder/lesson_back_btn.png").convert()
 
 """
 animation_intro = bigfont.render(('to be written...'), True, (255, 255, 255))
@@ -97,6 +109,7 @@ try:
         if state == "main menu":
             # ---------------code for the main menu-------------------
             screen.blit(main_menu_background, (0, 0))
+            lesson_state = "intro" #to make the state "intro" every time we exit the lessons
             # -------------------buttons-------------------
 
             btn_animation = screen.blit(btn_animation_img, (600, 40)) 
@@ -112,7 +125,27 @@ try:
             
         elif state == "lesson":  
             # ---------------code for the lesson-------------------               
-            screen.blit(lesson_intro, (20, 50))
+            #screen.blit(lesson_intro, (20, 50))
+            lesson.display_background(size, screen)
+            
+            #---------------buttons-------------
+            btn_lesson_intro = screen.blit(btn_lesson_intro_img, (25, 25))
+            btn_lesson_facial_expressions = screen.blit(btn_lesson_facial_expressions_img, (25, 130))
+            btn_lesson_gestures = screen.blit(btn_lesson_gestures_img, (25, 235))
+            btn_lesson_posture_appearance_personal_space = screen.blit(btn_lesson_posture_appearance_personal_space_img, (25, 340))
+            btn_lesson_voice_paralinguistics = screen.blit(btn_lesson_voice_paralinguistics_img, (25, 445))
+            btn_lesson_back = screen.blit(btn_lesson_back_img, (660, 505))
+            
+            if lesson_state == "intro":
+                lesson.display_introduction(size, screen)
+            elif lesson_state == "facial expressions":
+                lesson.display_facial_expressions(size, screen)
+            elif lesson_state == "gestures":
+                lesson.display_gestures(size, screen)
+            elif lesson_state == "posture appearance and personal space":
+                lesson.display_posture_appearance_personal_space(size, screen)
+            elif lesson_state == "voice/paralinguistics":
+                lesson.display_voice_paralinguistics(size, screen)            
 
         elif state == "quiz":
             # ---------------code for the quiz-------------------
@@ -147,6 +180,20 @@ try:
                     state = "results"                     
                 elif state == "main menu" and btn_exit.collidepoint(pos):
                     keepGoing = False
+                #Lesson buttons
+                elif state == "lesson" and btn_lesson_intro.collidepoint(pos):
+                    lesson_state = "intro"
+                elif state == "lesson" and btn_lesson_facial_expressions.collidepoint(pos):
+                    lesson_state = "facial expressions"
+                elif state == "lesson" and btn_lesson_gestures.collidepoint(pos):
+                    lesson_state = "gestures"
+                elif state == "lesson" and btn_lesson_posture_appearance_personal_space.collidepoint(pos):
+                    lesson_state = "posture appearance and personal space"
+                elif state == "lesson" and btn_lesson_voice_paralinguistics.collidepoint(pos):
+                    lesson_state = "voice/paralinguistics"
+                elif state == "lesson" and btn_lesson_back.collidepoint(pos):
+                    state = "main menu"
+                    
                 if btn_cont.collidepoint(pos):
                     state = "main menu"
 
