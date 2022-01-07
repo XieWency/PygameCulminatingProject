@@ -14,7 +14,6 @@ from pygame.locals import *
 
 #this will allow us to name the colours to use rather than give a name eg(255,0,0)
 from pygame.color import THECOLORS
-#c=(255,0,0) instead of THECOLORS['red']????
 
 #initial library itself
 pygame.init()  
@@ -52,11 +51,15 @@ bigfont = pygame.font.SysFont("insert... font", 42)
 #test=pygame.display.get_driver()
 state = "title screen"
 quiz_complete = False
+show_credits = False
 
-main_menu_background = pygame.image.load("image folder/main_menu_background.png").convert()
+main_menu_background = pygame.image.load("image folder/main_menu_background.jpg").convert()
 main_menu_background = pygame.transform.scale(main_menu_background, (size))
+
+"""
 credits_page = pygame.image.load("image folder/insert... png_m").convert()
 credits_page = pygame.transform.scale(credits_page, (size))
+"""
 
 btn_cont_img = pygame.image.load("image folder/btn_continue.jpg").convert()
 btn_cont_img = pygame.transform.scale(btn_cont_img, (200, 50))
@@ -115,15 +118,14 @@ try:
                 
             #declaration and initialization of variables
             state = "intro"
-            quiz_complete = False
             keep_quiz_going = True
+            exit_during_quiz = False
             correct_answers = ["C", "B", "D", "B", "A"]
-            current_question = int(1)
-            score = int(0)
-            btn_multiple_choice_size = (180, 55)
+            btn_multiple_choice_size = (210, 60)
                 
             #font memory storage (declaration)
-            choices_font = pygame.font.SysFont("comicsansms", 16)
+            choices_font = pygame.font.SysFont("comicsansms", 18)
+            choices_text_colour = (102, 102, 102)
                 
             #text memory storage (declaration)
             choice_a_file = ['A. 5%', 'A. verbal, nonverbal', 'A. willingness', 'A. 6 to 18 inches', 'A. sentence structure']               
@@ -132,11 +134,13 @@ try:
             choice_d_file = ['D. 93%', 'D. none of the above', 'D. anxiety', 'D. 12 to 25 feet', 'D. pitch']
                 
             #image memory storage (declaration)
-            results_file = ["image folder/score_0.jpg", "image folder/score_1.jpg", "image folder/score_2.jpg", "image folder/score_3.jpg", "image folder/score_4.jpg", "image folder/score_5.jpg"]            
+            results_file = ["image folder/score_0.png", "image folder/score_1.png", "image folder/score_2.png", "image folder/score_3.png", "image folder/score_4.png", "image folder/score_5.png"]            
             questions_file = ["image folder/question_1_background.png", "image folder/question_2_background.png", "image folder/question_3_background.png", "image folder/question_4_background.png", "image folder/question_5_background.png"]
             
             intro_background_img = pygame.image.load("image folder/quiz_background.png").convert()
             intro_background_img = pygame.transform.scale(intro_background_img, size)
+            correct_answers_img = pygame.image.load("image folder/correct_answers.png").convert()
+            correct_answers_img = pygame.transform.scale(correct_answers_img, size)
 
             btn_continue_img = pygame.image.load("image folder/btn_quiz_continue.png").convert()
             btn_continue_img = pygame.transform.scale(btn_continue_img, (180, 55))
@@ -154,6 +158,9 @@ try:
                 
             while keep_quiz_going and not quiz_complete:
                 
+                score = int(0)
+                current_question = int(1)
+                
                 if state == "intro": #intro/instructions screen
                     screen.blit(intro_background_img, (0, 0))  
                     btn_continue = screen.blit(btn_continue_img, (630, 435)) 
@@ -161,29 +168,29 @@ try:
                             
                 elif state == "begin": #quiz: 5 multiple choice
                     
-                    while current_question <= 5:
+                    while not exit_during_quiz and current_question <= 5:
                         multiple_choice_question = pygame.image.load(questions_file[current_question - 1]).convert()
                         multiple_choice_question = pygame.transform.scale(multiple_choice_question, size)
                         screen.blit(multiple_choice_question, (0, 0))  
                         
                         #coordinate variables declaration
                         pos_x_1 = 150
-                        pos_x_2 = 530
-                        pos_y_1 = 270
+                        pos_x_2 = 515
+                        pos_y_1 = 300
                         pos_y_2 = 400
-                        border_distance = 13
+                        border_distance = 16
                         
                         btn_choice_a = screen.blit(btn_choice_a_img, (pos_x_1, pos_y_1)) 
                         btn_choice_b = screen.blit(btn_choice_b_img, (pos_x_2, pos_y_1)) 
                         btn_choice_c = screen.blit(btn_choice_c_img, (pos_x_1, pos_y_2)) 
                         btn_choice_d = screen.blit(btn_choice_d_img, (pos_x_2, pos_y_2)) 
-                        choice_a = choices_font.render((choice_a_file[current_question - 1]), True, (0, 0, 0))
+                        choice_a = choices_font.render((choice_a_file[current_question - 1]), True, choices_text_colour)
                         screen.blit(choice_a, (pos_x_1 + border_distance, pos_y_1 + border_distance))
-                        choice_b = choices_font.render((choice_b_file[current_question - 1]), True, (0, 0, 0))
+                        choice_b = choices_font.render((choice_b_file[current_question - 1]), True, choices_text_colour)
                         screen.blit(choice_b, (pos_x_2 + border_distance, pos_y_1 + border_distance))
-                        choice_c = choices_font.render((choice_c_file[current_question - 1]), True, (0, 0, 0))
+                        choice_c = choices_font.render((choice_c_file[current_question - 1]), True, choices_text_colour)
                         screen.blit(choice_c, (pos_x_1 + border_distance, pos_y_2 + border_distance))
-                        choice_d = choices_font.render((choice_d_file[current_question - 1]), True, (0, 0, 0))
+                        choice_d = choices_font.render((choice_d_file[current_question - 1]), True, choices_text_colour)
                         screen.blit(choice_d, (pos_x_2 + border_distance, pos_y_2 + border_distance))                        
                         
                         #update and refresh the display to end this frame
@@ -193,10 +200,9 @@ try:
                         for ev in pygame.event.get(): 
                                     
                             if ev.type == pygame.QUIT: #<-- this special event type happens when the window is closed
-
+                                exit_during_quiz = True
                                 keep_quiz_going = False
                                 keepGoing = False
-                                break
                                         
                             elif ev.type == MOUSEBUTTONDOWN:
                                 pos = pygame.mouse.get_pos()  
@@ -216,10 +222,17 @@ try:
                                     if check_answer(correct_answers[current_question - 1], "D"):
                                         score += 1   
                                     current_question += 1
-                                
-                    quiz_complete = True
-                    state = "results" 
                         
+                    if not exit_during_quiz:
+                        
+                        #displays answers for 3 seconds
+                        screen.blit(correct_answers_img, (0, 0))  
+                        pygame.display.update()   
+                        pygame.time.wait(3000)      
+                    
+                        quiz_complete = True
+                        state = "results"
+                                            
                 #handle any events in the current frame
                 for ev in pygame.event.get(): 
                             
@@ -237,21 +250,23 @@ try:
                             
                 #update and refresh the display to end this frame
                 pygame.display.flip()
+                
+            if quiz_complete:
+                state = "results"
             
         elif state == "results":
             # ---------------code for results-------------------
             #image memory storage (declaration)            
-            no_results_img = pygame.image.load("image folder/quiz_not_completed.jpg").convert()
+            no_results_img = pygame.image.load("image folder/quiz_not_completed.png").convert()
             no_results_img = pygame.transform.scale(no_results_img, size)       
             
             btn_return_img = pygame.image.load("image folder/btn_quiz_return.png").convert()
             btn_return_img = pygame.transform.scale(btn_return_img, (180, 55))
             
-            if quiz_complete:
+            if quiz_complete:    
                 result = pygame.image.load(results_file[score]).convert()
                 result = pygame.transform.scale(result, size)   
                 screen.blit(result, (0, 0))  
-
 
             else: #for backup purposes: even if the user attempts to view the results before completing the quiz, the program won't crash
                 screen.blit(no_results_img, (0, 0)) 
@@ -289,12 +304,16 @@ try:
                 elif state == "main menu" and btn_result.collidepoint(pos):
                     state = "results"                     
                 elif state == "main menu" and btn_exit.collidepoint(pos):
+                    show_credits = True
                     keepGoing = False
                 if btn_cont.collidepoint(pos):
                     state = "main menu"
 
 finally:
-    screen.blit(credits_page, (0, 0))  
-    pygame.display.flip()
-    time.sleep(15)
+    
+    if show_credits: #excludes when window is closed
+        screen.blit(credits_page, (0, 0))  
+        pygame.display.flip()
+        time.sleep(15)
+
     pygame.quit()  # keep this IDLE friendly 
