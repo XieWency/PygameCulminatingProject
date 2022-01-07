@@ -1,6 +1,6 @@
 """
 Program Authors: Wency Xie & Sue He
-Revision Date: January 06, 2022
+Revision Date: January 03, 2022
 Program Name: Python Culminating Project - main file
 Description: to be written...
 """
@@ -26,9 +26,6 @@ import os, time
 import platform
 if platform.system() == "Windows":
     os.environ['SDL_VIDEODRIVER'] = 'windib'
-    
-#import subprograms
-import lesson
 
 #set-up the main screen display window
 display_width = 880
@@ -54,14 +51,13 @@ bigfont = pygame.font.SysFont("insert... font", 42)
 
 #test=pygame.display.get_driver()
 state = "title screen"
-lesson_state = "intro"
+quiz_complete = False
 
 main_menu_background = pygame.image.load("image folder/main_menu_background.png").convert()
 main_menu_background = pygame.transform.scale(main_menu_background, (size))
+credits_page = pygame.image.load("image folder/insert... png_m").convert()
+credits_page = pygame.transform.scale(credits_page, (size))
 
-"""
-credits_background = pygame.image.load("image folder/insert... png_m").convert()
-"""
 btn_cont_img = pygame.image.load("image folder/btn_continue.jpg").convert()
 btn_cont_img = pygame.transform.scale(btn_cont_img, (200, 50))
 
@@ -75,25 +71,6 @@ btn_result_img = pygame.image.load("image folder/btn_result.jpg").convert()
 btn_result_img = pygame.transform.scale(btn_result_img, main_menu_btn_size)
 btn_exit_img = pygame.image.load("image folder/btn_exit.jpg").convert()
 btn_exit_img = pygame.transform.scale(btn_exit_img, main_menu_btn_size)
-
-#Lesson buttons
-btn_lesson_intro_img = pygame.image.load("image folder/intro_btn.png").convert()
-btn_lesson_facial_expressions_img = pygame.image.load("image folder/facial_expressions_btn.png").convert()
-btn_lesson_gestures_img = pygame.image.load("image folder/gestures_btn.png").convert()
-btn_lesson_posture_appearance_personal_space_img = pygame.image.load("image folder/posture_appearance_personal_space_btn.png").convert()
-btn_lesson_voice_paralinguistics_img = pygame.image.load("image folder/voice_paralinguistics_btn.png").convert()
-btn_lesson_back_img = pygame.image.load("image folder/lesson_back_btn.png").convert()
-
-"""
-animation_intro = bigfont.render(('to be written...'), True, (255, 255, 255))
-lesson_intro = bigfont.render(('to be written...'), True, (255, 255, 255))
-quiz_intro = bigfont.render(('to be written...'), True, (0, 0, 0))
-no_results_comment = bigfont.render(('to be written...'), True, (200, 0, 10))
-results_display = bigfont.render(('to be written...'), True, (200, 0, 10))
-credits_display = bigfont.render(('to be written...'), True, (0, 0, 0))
-"""
-
-quiz_complete = False
 
 try:
     while keepGoing:
@@ -109,7 +86,6 @@ try:
         if state == "main menu":
             # ---------------code for the main menu-------------------
             screen.blit(main_menu_background, (0, 0))
-            lesson_state = "intro" #to make the state "intro" every time we exit the lessons
             # -------------------buttons-------------------
 
             btn_animation = screen.blit(btn_animation_img, (600, 40)) 
@@ -125,40 +101,174 @@ try:
             
         elif state == "lesson":  
             # ---------------code for the lesson-------------------               
-            #screen.blit(lesson_intro, (20, 50))
-            lesson.display_background(size, screen)
-            
-            #---------------buttons-------------
-            btn_lesson_intro = screen.blit(btn_lesson_intro_img, (25, 25))
-            btn_lesson_facial_expressions = screen.blit(btn_lesson_facial_expressions_img, (25, 130))
-            btn_lesson_gestures = screen.blit(btn_lesson_gestures_img, (25, 235))
-            btn_lesson_posture_appearance_personal_space = screen.blit(btn_lesson_posture_appearance_personal_space_img, (25, 340))
-            btn_lesson_voice_paralinguistics = screen.blit(btn_lesson_voice_paralinguistics_img, (25, 445))
-            btn_lesson_back = screen.blit(btn_lesson_back_img, (660, 505))
-            
-            if lesson_state == "intro":
-                lesson.display_introduction(size, screen)
-            elif lesson_state == "facial expressions":
-                lesson.display_facial_expressions(size, screen)
-            elif lesson_state == "gestures":
-                lesson.display_gestures(size, screen)
-            elif lesson_state == "posture appearance and personal space":
-                lesson.display_posture_appearance_personal_space(size, screen)
-            elif lesson_state == "voice/paralinguistics":
-                lesson.display_voice_paralinguistics(size, screen)            
+            screen.blit(lesson_intro, (20, 50))
 
         elif state == "quiz":
             # ---------------code for the quiz-------------------
-            from quiz import display_quiz
-            display_quiz(size, screen)
+            def check_answer(correct_answer, user_answer):
+                if user_answer == correct_answer:
+                    return True
+                else:
+                    return False
+            
+            #IMPORTANT NOTES/REMINDERS: add section of code - individual question results (correct or incorrect)
+                
+            #declaration and initialization of variables
+            state = "intro"
+            quiz_complete = False
+            keep_quiz_going = True
+            correct_answers = ["C", "B", "D", "B", "A"]
+            current_question = int(1)
+            score = int(0)
+            btn_multiple_choice_size = (180, 55)
+                
+            #font memory storage (declaration)
+            choices_font = pygame.font.SysFont("comicsansms", 16)
+                
+            #text memory storage (declaration)
+            choice_a_file = ['A. 5%', 'A. verbal, nonverbal', 'A. willingness', 'A. 6 to 18 inches', 'A. sentence structure']               
+            choice_b_file = ['B. 50%', 'B. nonverbal, verbal', 'B. anger', 'B. 1.5 to 4 feet', 'B. tone of voice']
+            choice_c_file = ['C. 7%', 'C. not sure', 'C. disapproval', 'C. 4 to 12 feet', 'C. loudness']
+            choice_d_file = ['D. 93%', 'D. none of the above', 'D. anxiety', 'D. 12 to 25 feet', 'D. pitch']
+                
+            #image memory storage (declaration)
+            results_file = ["image folder/score_0.jpg", "image folder/score_1.jpg", "image folder/score_2.jpg", "image folder/score_3.jpg", "image folder/score_4.jpg", "image folder/score_5.jpg"]            
+            questions_file = ["image folder/question_1_background.png", "image folder/question_2_background.png", "image folder/question_3_background.png", "image folder/question_4_background.png", "image folder/question_5_background.png"]
+            
+            intro_background_img = pygame.image.load("image folder/quiz_background.png").convert()
+            intro_background_img = pygame.transform.scale(intro_background_img, size)
+
+            btn_continue_img = pygame.image.load("image folder/btn_quiz_continue.png").convert()
+            btn_continue_img = pygame.transform.scale(btn_continue_img, (180, 55))
+            btn_back_img = pygame.image.load("image folder/btn_quiz_back.png").convert()
+            btn_back_img = pygame.transform.scale(btn_back_img, (180, 55))            
+            
+            btn_choice_a_img = pygame.image.load("image folder/btn_choice_img.png").convert()
+            btn_choice_a_img = pygame.transform.scale(btn_choice_a_img, btn_multiple_choice_size)
+            btn_choice_b_img = pygame.image.load("image folder/btn_choice_img.png").convert()
+            btn_choice_b_img = pygame.transform.scale(btn_choice_b_img, btn_multiple_choice_size)
+            btn_choice_c_img = pygame.image.load("image folder/btn_choice_img.png").convert()
+            btn_choice_c_img = pygame.transform.scale(btn_choice_c_img, btn_multiple_choice_size)
+            btn_choice_d_img = pygame.image.load("image folder/btn_choice_img.png").convert()
+            btn_choice_d_img = pygame.transform.scale(btn_choice_d_img, btn_multiple_choice_size)     
+                
+            while keep_quiz_going and not quiz_complete:
+                
+                if state == "intro": #intro/instructions screen
+                    screen.blit(intro_background_img, (0, 0))  
+                    btn_continue = screen.blit(btn_continue_img, (630, 435)) 
+                    btn_back = screen.blit(btn_back_img, (67, 435)) 
+                            
+                elif state == "begin": #quiz: 5 multiple choice
+                    
+                    while current_question <= 5:
+                        multiple_choice_question = pygame.image.load(questions_file[current_question - 1]).convert()
+                        multiple_choice_question = pygame.transform.scale(multiple_choice_question, size)
+                        screen.blit(multiple_choice_question, (0, 0))  
+                        
+                        #coordinate variables declaration
+                        pos_x_1 = 150
+                        pos_x_2 = 530
+                        pos_y_1 = 270
+                        pos_y_2 = 400
+                        border_distance = 13
+                        
+                        btn_choice_a = screen.blit(btn_choice_a_img, (pos_x_1, pos_y_1)) 
+                        btn_choice_b = screen.blit(btn_choice_b_img, (pos_x_2, pos_y_1)) 
+                        btn_choice_c = screen.blit(btn_choice_c_img, (pos_x_1, pos_y_2)) 
+                        btn_choice_d = screen.blit(btn_choice_d_img, (pos_x_2, pos_y_2)) 
+                        choice_a = choices_font.render((choice_a_file[current_question - 1]), True, (0, 0, 0))
+                        screen.blit(choice_a, (pos_x_1 + border_distance, pos_y_1 + border_distance))
+                        choice_b = choices_font.render((choice_b_file[current_question - 1]), True, (0, 0, 0))
+                        screen.blit(choice_b, (pos_x_2 + border_distance, pos_y_1 + border_distance))
+                        choice_c = choices_font.render((choice_c_file[current_question - 1]), True, (0, 0, 0))
+                        screen.blit(choice_c, (pos_x_1 + border_distance, pos_y_2 + border_distance))
+                        choice_d = choices_font.render((choice_d_file[current_question - 1]), True, (0, 0, 0))
+                        screen.blit(choice_d, (pos_x_2 + border_distance, pos_y_2 + border_distance))                        
+                        
+                        #update and refresh the display to end this frame
+                        pygame.display.flip()                        
+                        
+                        #handle any events in the current frame
+                        for ev in pygame.event.get(): 
+                                    
+                            if ev.type == pygame.QUIT: #<-- this special event type happens when the window is closed
+
+                                keep_quiz_going = False
+                                keepGoing = False
+                                break
+                                        
+                            elif ev.type == MOUSEBUTTONDOWN:
+                                pos = pygame.mouse.get_pos()  
+                                if btn_choice_a.collidepoint(pos):
+                                    if check_answer(correct_answers[current_question - 1], "A"):
+                                        score += 1
+                                    current_question += 1
+                                elif btn_choice_b.collidepoint(pos):
+                                    if check_answer(correct_answers[current_question - 1], "B"):
+                                        score += 1    
+                                    current_question += 1
+                                elif btn_choice_c.collidepoint(pos):
+                                    if check_answer(correct_answers[current_question - 1], "C"):
+                                        score += 1
+                                    current_question += 1
+                                elif btn_choice_d.collidepoint(pos):
+                                    if check_answer(correct_answers[current_question - 1], "D"):
+                                        score += 1   
+                                    current_question += 1
+                                
+                    quiz_complete = True
+                    state = "results" 
+                        
+                #handle any events in the current frame
+                for ev in pygame.event.get(): 
+                            
+                    if ev.type == pygame.QUIT: #<-- this special event type happens when the window is closed
+                        keep_quiz_going = False
+                        keepGoing = False
+                                
+                    elif ev.type == MOUSEBUTTONDOWN:
+                        pos = pygame.mouse.get_pos()
+                        if btn_continue.collidepoint(pos):
+                            state = "begin"
+                        elif btn_back.collidepoint(pos):
+                            state = "main menu"
+                            keep_quiz_going = False  
+                            
+                #update and refresh the display to end this frame
+                pygame.display.flip()
             
         elif state == "results":
             # ---------------code for results-------------------
+            #image memory storage (declaration)            
+            no_results_img = pygame.image.load("image folder/quiz_not_completed.jpg").convert()
+            no_results_img = pygame.transform.scale(no_results_img, size)       
+            
+            btn_return_img = pygame.image.load("image folder/btn_quiz_return.png").convert()
+            btn_return_img = pygame.transform.scale(btn_return_img, (180, 55))
+            
             if quiz_complete:
-                import quiz
-            else: #for backup purposes: even if the user attempts to view the results before completing the quiz, the program won't crash
-                screen.blit(no_results_comment, (20, 70)) 
+                result = pygame.image.load(results_file[score]).convert()
+                result = pygame.transform.scale(result, size)   
+                screen.blit(result, (0, 0))  
 
+
+            else: #for backup purposes: even if the user attempts to view the results before completing the quiz, the program won't crash
+                screen.blit(no_results_img, (0, 0)) 
+            
+            btn_return = screen.blit(btn_return_img, (67, 435))
+            
+            #handle any events in the current frame
+            for ev in pygame.event.get(): 
+                        
+                if ev.type == pygame.QUIT: #<-- this special event type happens when the window is closed
+                    keepGoing = False
+                            
+                elif ev.type == MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    if btn_return.collidepoint(pos):
+                        state = "main menu"
+                        
         pygame.display.flip()
         #handle any events in the current frame
         #print(pygame.event.get())
@@ -180,27 +290,11 @@ try:
                     state = "results"                     
                 elif state == "main menu" and btn_exit.collidepoint(pos):
                     keepGoing = False
-                #Lesson buttons
-                elif state == "lesson" and btn_lesson_intro.collidepoint(pos):
-                    lesson_state = "intro"
-                elif state == "lesson" and btn_lesson_facial_expressions.collidepoint(pos):
-                    lesson_state = "facial expressions"
-                elif state == "lesson" and btn_lesson_gestures.collidepoint(pos):
-                    lesson_state = "gestures"
-                elif state == "lesson" and btn_lesson_posture_appearance_personal_space.collidepoint(pos):
-                    lesson_state = "posture appearance and personal space"
-                elif state == "lesson" and btn_lesson_voice_paralinguistics.collidepoint(pos):
-                    lesson_state = "voice/paralinguistics"
-                elif state == "lesson" and btn_lesson_back.collidepoint(pos):
-                    state = "main menu"
-                    
                 if btn_cont.collidepoint(pos):
                     state = "main menu"
 
 finally:
-    """
-    screen.blit(credits_background, (0, 0))  
-    screen.blit(credits_display, (20, 70))    
+    screen.blit(credits_page, (0, 0))  
+    pygame.display.flip()
     time.sleep(15)
-    """
     pygame.quit()  # keep this IDLE friendly 
