@@ -1,8 +1,10 @@
 """
 Program Authors: Wency Xie & Sue He
-Revision Date: January 03, 2022
+Revision Date: January 13, 2022
 Program Name: Python Culminating Project - main file
-Description: to be written...
+Description: A program that allows people to learn some basics of body language. In the program, 
+a title screen will lead to the main menu, which then the user can choose to enter the 
+animation, lesson, quiz, results, or exit.
 """
 
 #import module(s)
@@ -25,6 +27,11 @@ import os, time
 import platform
 if platform.system() == "Windows":
     os.environ['SDL_VIDEODRIVER'] = 'windib'
+    
+#import subprograms
+import title_screen
+import animation
+import lesson
 
 #set-up the main screen display window
 display_width = 880
@@ -52,6 +59,10 @@ bigfont = pygame.font.SysFont("insert... font", 42)
 state = "title screen"
 quiz_complete = False
 show_credits = False
+sub_state = "introduction"
+sub_sub_state = "intro"
+animation_choice_selected = "none"
+animation_label = "none"
 
 main_menu_background = pygame.image.load("image folder/main_menu_background.jpg").convert()
 main_menu_background = pygame.transform.scale(main_menu_background, (size))
@@ -60,9 +71,6 @@ main_menu_background = pygame.transform.scale(main_menu_background, (size))
 credits_page = pygame.image.load("image folder/insert... png_m").convert()
 credits_page = pygame.transform.scale(credits_page, (size))
 """
-
-btn_cont_img = pygame.image.load("image folder/btn_continue.jpg").convert()
-btn_cont_img = pygame.transform.scale(btn_cont_img, (200, 50))
 
 btn_animation_img = pygame.image.load("image folder/btn_animation.jpg").convert()
 btn_animation_img = pygame.transform.scale(btn_animation_img, main_menu_btn_size)
@@ -81,10 +89,7 @@ try:
         clock.tick(60) #delay 
         
         if state == "title screen":
-            from title_screen import display_title_screen
-            display_title_screen(size, screen)
-            # -------------------button-------------------
-            btn_cont = screen.blit(btn_cont_img, (645, 465))            
+            title_screen.display(size, screen, sub_state)         
         
         if state == "main menu":
             # ---------------code for the main menu-------------------
@@ -100,11 +105,11 @@ try:
    
         elif state == "animation":  
             # ---------------code for the animation-------------------               
-            screen.blit(animation_intro, (20, 50))
+            animation.display(size, screen, sub_state, sub_sub_state, animation_choice_selected, animation_label)
             
         elif state == "lesson":  
             # ---------------code for the lesson-------------------               
-            screen.blit(lesson_intro, (20, 50))
+            lesson.display(size, screen, sub_state)
 
         elif state == "quiz":
             # ---------------code for the quiz-------------------
@@ -297,8 +302,11 @@ try:
                 pos = pygame.mouse.get_pos()
                 if state == "main menu" and btn_animation.collidepoint(pos):
                     state = "animation"
+                    sub_state = "instructions"
+                    sub_sub_state = "intro"                    
                 elif state == "main menu" and btn_lesson.collidepoint(pos):
                     state = "lesson"
+                    sub_state = "introduction"
                 elif state == "main menu" and btn_quiz.collidepoint(pos):
                     state = "quiz"      
                 elif state == "main menu" and btn_result.collidepoint(pos):
@@ -306,8 +314,20 @@ try:
                 elif state == "main menu" and btn_exit.collidepoint(pos):
                     show_credits = True
                     keepGoing = False
-                if btn_cont.collidepoint(pos):
-                    state = "main menu"
+                elif state == "title screen":
+                    state = title_screen.handle_button_click(screen, sub_state, pos)
+                elif state == "animation":
+                    state = animation.handle_button_click(screen, pos)
+                    sub_state = animation.handle_animation_button_click(screen, sub_state, pos)
+                    sub_sub_state = animation.handle_animation_main_screen_button_click(screen, sub_state, sub_sub_state, pos)
+                    animation_choice_selected = animation.handle_choice_selection_button_click(size, screen, sub_state, sub_sub_state, animation_choice_selected, pos)
+                elif state == "lesson":
+                    state = lesson.handle_button_click(screen, pos)
+                    sub_state = lesson.handle_lesson_button_click(screen, sub_state, pos)
+                    
+            elif ev.type == MOUSEMOTION and state == "animation":
+                hover = pygame.mouse.get_pos()
+                animation_label = animation.handle_mouse_movement(screen, sub_state, hover)                
 
 finally:
     
