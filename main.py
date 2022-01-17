@@ -1,10 +1,9 @@
 """
-Program Authors: Wency Xie & Sue He
+Author Names: Wency Xie & Sue He
 Revision Date: January 13, 2022
 Program Name: Python Culminating Project - main file
-Description: A program that allows people to learn some basics of body language. In the program, 
-a title screen will lead to the main menu, which then the user can choose to enter the 
-animation, lesson, quiz, results, or exit.
+Description: A program that allows people to learn some basics of body language. In the program, a title screen 
+will lead to the main menu, which then the user can choose to enter the animation, lesson, quiz, results, or exit.
 """
 
 #import module(s)
@@ -52,9 +51,6 @@ pygame.display.flip() #<-- refresh the display
 clock = pygame.time.Clock() #<-- used to control the frame rate
 keepGoing = True 	    #<-- a 'flag' variable for the game loop condition
 
-#set up the font and the size 
-bigfont = pygame.font.SysFont("insert... font", 42)
-
 #test=pygame.display.get_driver()
 state = "title screen"
 quiz_complete = False
@@ -64,13 +60,15 @@ sub_sub_state = "intro"
 animation_choice_selected = "none"
 animation_label = "none"
 
-main_menu_background = pygame.image.load("image folder/main_menu_background.jpg").convert()
+main_menu_background = pygame.image.load("image folder/main_menu_background.png").convert()
 main_menu_background = pygame.transform.scale(main_menu_background, (size))
 
-"""
-credits_page = pygame.image.load("image folder/insert... png_m").convert()
-credits_page = pygame.transform.scale(credits_page, (size))
-"""
+credits_page_1 = pygame.image.load("image folder/sources_page_1.png").convert()
+credits_page_1 = pygame.transform.scale(credits_page_1, (size))
+credits_page_2 = pygame.image.load("image folder/sources_page_2.png").convert()
+credits_page_2 = pygame.transform.scale(credits_page_2, (size))
+credits_page_3 = pygame.image.load("image folder/sources_page_3.png").convert()
+credits_page_3 = pygame.transform.scale(credits_page_3, (size))
 
 btn_animation_img = pygame.image.load("image folder/btn_animation.jpg").convert()
 btn_animation_img = pygame.transform.scale(btn_animation_img, main_menu_btn_size)
@@ -96,11 +94,11 @@ try:
             screen.blit(main_menu_background, (0, 0))
             # -------------------buttons-------------------
 
-            btn_animation = screen.blit(btn_animation_img, (600, 40)) 
-            btn_lesson = screen.blit(btn_lesson_img, (600, 140)) 
-            btn_quiz = screen.blit(btn_quiz_img, (600, 240))
-            btn_result = screen.blit(btn_result_img, (600, 340))
-            btn_exit = screen.blit(btn_exit_img, (600, 440))
+            btn_animation = screen.blit(btn_animation_img, (610, 40)) 
+            btn_lesson = screen.blit(btn_lesson_img, (610, 138)) 
+            btn_quiz = screen.blit(btn_quiz_img, (610, 236))
+            btn_result = screen.blit(btn_result_img, (610, 334))
+            btn_exit = screen.blit(btn_exit_img, (610, 432))
 
    
         elif state == "animation":  
@@ -332,8 +330,14 @@ try:
 finally:
     
     if show_credits: #excludes when window is closed
-        screen.blit(credits_page, (0, 0))  
+        screen.blit(credits_page_1, (0, 0))  
         pygame.display.flip()
-        time.sleep(15)
+        time.sleep(4)
+        screen.blit(credits_page_2, (0, 0))  
+        pygame.display.flip()
+        time.sleep(4)        
+        screen.blit(credits_page_3, (0, 0))  
+        pygame.display.flip()
+        time.sleep(4)        
 
     pygame.quit()  # keep this IDLE friendly 
