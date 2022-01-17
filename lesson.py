@@ -1,6 +1,6 @@
 '''
 Author Name: Wency Xie & Sue He
-Revision Date: January 6, 2022
+Revision Date: January 17, 2022
 Subprogram Name: Lesson File
 Description: Contains all the subprograms needed for the lesson screen to operate.
 '''
@@ -87,7 +87,7 @@ def display_introduction(screen):
     font = pygame.font.SysFont("courier", 17, bold = True)
     
     #displays the introduction text for the lesson
-    with open("introduction_text.txt") as word_file:
+    with open("text folder/introduction_text.txt") as word_file:
         for word in word_file:
             text += word
     
@@ -117,7 +117,7 @@ def display_facial_expressions(screen):
     font = pygame.font.SysFont("courier", 12, bold = True)
     
     #displays the introduction text for the lesson
-    with open("facial_expressions_text.txt") as word_file:
+    with open("text folder/facial_expressions_text.txt") as word_file:
         for word in word_file:
             text += word
     
@@ -147,7 +147,7 @@ def display_gestures(screen):
     font = pygame.font.SysFont("courier", 14, bold = True)
     
     #displays the introduction text for the lesson
-    with open("gestures_text.txt") as word_file:
+    with open("text folder/gestures_text.txt") as word_file:
         for word in word_file:
             text += word
     
@@ -177,7 +177,7 @@ def display_posture_appearance_personal_space(screen):
     font = pygame.font.SysFont("courier", 11, bold = True)
     
     #displays the introduction text for the lesson
-    with open("posture_appearance_personal_space_text.txt") as word_file:
+    with open("text folder/posture_appearance_personal_space_text.txt") as word_file:
         for word in word_file:
             text += word
     
@@ -207,7 +207,7 @@ def display_voice_paralinguistics(screen):
     font = pygame.font.SysFont("courier", 17, bold = True)
     
     #displays the introduction text for the lesson
-    with open("voice_paralinguistics_text.txt") as word_file:
+    with open("text folder/voice_paralinguistics_text.txt") as word_file:
         for word in word_file:
             text += word
     

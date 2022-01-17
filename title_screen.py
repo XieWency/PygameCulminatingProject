@@ -1,6 +1,6 @@
 '''
 Author Name: Wency Xie
-Revision Date: January 13, 2022
+Revision Date: January 17, 2022
 Subprogram Name: Title Screen File
 Description: Contains all the subprograms needed for the title screen to operate.
 '''
@@ -52,7 +52,7 @@ def display_text(screen):
     text_list = []
     normal_text_y = int(225)
     
-    with open("title_screen_text.txt") as word_file:
+    with open("text folder/title_screen_text.txt") as word_file:
         for word in word_file:
             text += word
     
